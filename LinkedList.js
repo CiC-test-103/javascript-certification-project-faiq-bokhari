@@ -37,6 +37,9 @@ class LinkedList {
    */
   constructor() {
     // TODO
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
   }
 
   /**
@@ -49,6 +52,19 @@ class LinkedList {
    */
   addStudent(newStudent) {
     // TODO
+    let studentNode = new Node(newStudent);
+    studentNode.next = null;
+    //Case 1: no nodes initially
+    if(this.head === null){
+      this.head = studentNode
+      this.tail = studentNode;
+    } else{
+    //Case 2: if nodes available, then use tail to find last node and update
+      this.tail.next = studentNode;
+      this.tail = studentNode;
+      this.length += 1;
+    }
+
   }
 
   /**
@@ -92,7 +108,16 @@ class LinkedList {
    */
   displayStudents() {
     // TODO
-    return "";
+    let current = this.head;
+    let output = "";
+    while(current != null){
+      output += current.data;
+      if(current.next != null){
+        output += ", ";
+      }
+      current = current.next;
+    }
+    return output;
   }
 
   /**
