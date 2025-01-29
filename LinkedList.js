@@ -62,9 +62,8 @@ class LinkedList {
     //Case 2: if nodes available, then use tail to find last node and update
       this.tail.next = studentNode;
       this.tail = studentNode;
-      this.length += 1;
     }
-
+    this.length += 1;
   }
 
   /**
@@ -77,6 +76,35 @@ class LinkedList {
    */
   removeStudent(email) {
     // TODO
+    let current = this.head;
+    let previous;
+
+    while(current != null){
+      if(current.data.getEmail() === email){
+        if(current === this.head){
+          if(current.next != null){
+            this.head = current.next;
+          }else {
+            this.head = null;
+            this.tail = null;
+          }
+        }else if(current === this.tail){
+          previous.next = null;
+          this.tail = previous;
+        }else{
+          if(previous === this.head){
+            previous.next = current.next;
+          } 
+        }
+        this.length -= 1;
+        return;
+      }else 
+      {
+        previous = current;
+        current = current.next
+      }
+    }
+    return;
   }
 
   /**
@@ -86,6 +114,14 @@ class LinkedList {
    */
   findStudent(email) {
     // TODO
+    let current = this.head;
+    
+    while(current != null){
+      if (current.data.getEmail() === email){
+        return current.data;
+      }
+      current = current.next;
+    }
     return -1
   }
 
@@ -95,6 +131,15 @@ class LinkedList {
    * RETURNS:   None
    */
   #clearStudents() {
+    let current = this.head;
+
+    while(current != null){
+      current = null;
+      current = current.next;
+    }
+    this.head = null;
+    this.tail = null;
+    this.length = 0;
     // TODO
   }
 
@@ -111,7 +156,7 @@ class LinkedList {
     let current = this.head;
     let output = "";
     while(current != null){
-      output += current.data;
+      output += current.data.getName();
       if(current.next != null){
         output += ", ";
       }
@@ -127,7 +172,17 @@ class LinkedList {
    */
   #sortStudentsByName() {
     // TODO
-    return [];
+    let current = this.head;
+    let studentArray = [];
+
+    while(current != null){
+      studentArray.push(current.data);
+      current = current.next;
+    }
+    
+    studentArray.sort((a,b) => a.getName() - b.getName());
+
+    return studentArray;
   }
 
   /**
@@ -139,7 +194,15 @@ class LinkedList {
    */
   filterBySpecialization(specialization) {
     // TODO
-    return [];
+    let filteredArray = this.#sortStudentsByName();
+
+    filteredArray.forEach((student, index) => {
+      if(student.getSpecialization() != specialization){
+        filteredArray.splice(index, 1);
+      }  
+    });
+
+    return filteredArray;
   }
 
   /**
@@ -151,7 +214,15 @@ class LinkedList {
    */
   filterByMinAge(minAge) {
     // TODO
-    return [];
+    let filteredArray = this.#sortStudentsByName();
+
+    filteredArray.forEach((student, index) => {
+      if(student.getYear() < minAge){ ////////////////////////where is minAge ?
+        filteredArray.splice(index, 1);
+      }  
+    });
+
+    return filteredArray;
   }
 
   /**
@@ -161,6 +232,31 @@ class LinkedList {
    */
   async saveToJson(fileName) {
     // TODO
+    const fs = require("fs");
+
+    let results = [];
+
+    let current = this.head;
+
+    while(current != null){
+      results.push({
+        name: current.data.getName(), 
+        year: current.data.getYear(),
+        email: current.data.getEmail(),
+        specialization: current.data.getSpecialization(),
+      });
+      current = current.next;
+    }
+
+    
+    const data = JSON.stringify(results);
+
+    fs.writeFile(fileName, data, (error) => {
+      if(error){
+        throw error;
+      }
+    });
+
   }
 
   /**
@@ -171,7 +267,22 @@ class LinkedList {
    *  - Use clearStudents() to perform overwriting
    */
   async loadFromJSON(fileName) {
-    // TODO
+    const fs = require("fs").promises;
+  
+    try {
+      const data = await fs.readFile(fileName, "utf8"); 
+      const results = JSON.parse(data); 
+  
+      this.#clearStudents(); 
+  
+      results.forEach(studentData => {
+        let newStudent = new Student(studentData.name, studentData.year, studentData.email, studentData.specialization);
+        this.addStudent(newStudent);
+      });
+  
+    } catch (error) {
+      throw error;
+    }
   }
 
 }
