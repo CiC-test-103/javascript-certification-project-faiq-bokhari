@@ -130,7 +130,7 @@ class LinkedList {
    * EFFECTS:   Clears all students from the Linked List
    * RETURNS:   None
    */
-  #clearStudents() {
+  clearStudents() {
     let current = this.head;
 
     while(current != null){
@@ -194,14 +194,20 @@ class LinkedList {
    */
   filterBySpecialization(specialization) {
     // TODO
-    let filteredArray = this.#sortStudentsByName();
+    //implementation using splice method
+    // let filteredArray = this.#sortStudentsByName();
 
-    filteredArray.forEach((student, index) => {
-      if(student.getSpecialization() != specialization){
-        filteredArray.splice(index, 1);
-      }  
-    });
+    // filteredArray.forEach((student, index) => {
+    //   if(student.getSpecialization() != specialization){
+    //     filteredArray.splice(index, 1);
+    //   }  
+    // });
 
+    // return filteredArray;
+
+    //implementation using map, reduce, filter
+    let sortedArray = this.#sortStudentsByName();
+    const filteredArray = sortedArray.filter(student => student.getSpecialization() === specialization);
     return filteredArray;
   }
 
@@ -212,16 +218,22 @@ class LinkedList {
    * CONSIDERATIONS:
    * - Use sortStudentsByName()
    */
-  filterByMinAge(minAge) {
+  filterByMinYear(minYear) {
     // TODO
-    let filteredArray = this.#sortStudentsByName();
+    //implementation using splice method
+    // let filteredArray = this.#sortStudentsByName();
 
-    filteredArray.forEach((student, index) => {
-      if(student.getYear() < minAge){ ////////////////////////where is minAge ?
-        filteredArray.splice(index, 1);
-      }  
-    });
+    // filteredArray.forEach((student, index) => {
+    //   if(student.getYear() < minYear){
+    //     filteredArray.splice(index, 1);
+    //   }  
+    // });
 
+    // return filteredArray;
+
+    //implementation using map, filter, reduce
+    let sortedArray = this.#sortStudentsByName();
+    const filteredArray = sortedArray.filter(student => student.getYear() >= minYear);
     return filteredArray;
   }
 
@@ -273,7 +285,7 @@ class LinkedList {
       const data = await fs.readFile(fileName, "utf8"); 
       const results = JSON.parse(data); 
   
-      this.#clearStudents(); 
+      this.clearStudents(); 
   
       results.forEach(studentData => {
         let newStudent = new Student(studentData.name, studentData.year, studentData.email, studentData.specialization);
