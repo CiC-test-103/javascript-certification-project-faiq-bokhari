@@ -143,9 +143,9 @@ async function handleCommand(command) {
       console.log('Loading data...')
       // --------> WRITE YOUR CODE BELOW
       const [loadFileName] = args
-      studentManagementSystem.loadFromJSON(loadFileName);
-      var output = studentManagementSystem.displayStudents();
-      console.log(output);
+      studentManagementSystem.loadFromJSON(loadFileName).then(() => {
+        console.log(studentManagementSystem.displayStudents());
+      }).catch(error => console.error("Error loading data:", error));
 
       // --------> WRITE YOUR CODE ABOVE
       break;

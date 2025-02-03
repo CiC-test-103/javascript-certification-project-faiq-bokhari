@@ -134,8 +134,9 @@ class LinkedList {
     let current = this.head;
 
     while(current != null){
-      current = null;
-      current = current.next;
+      let nextNode = current.next;
+      current.next = null;
+      current = nextNode;
     }
     this.head = null;
     this.tail = null;
